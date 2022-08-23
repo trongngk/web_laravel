@@ -22,7 +22,7 @@
                   </div>
                   <div class="card-body">
                     
-                    <iframe src="http://localhost/Class_Room/public/assets/{{$challenge->file}}"
+                    <iframe src="http://localhost/Class_Room/public/assets/{{$answer}}"
                       style="background-color: Snow;" width="100%" height="500" style="border:1px"></iframe>
 
                   </div>
