@@ -23,14 +23,13 @@ class ChallengeController extends Controller
     public function store(Request $request)
     {
         $challenge = new Challenges();
-
-        $file=$request->file('file');
-        $filename=$file->getClientOriginalName();
-        $request->file->move('assets',$filename);
-
         $challenge->name = $request->name;
         $challenge->hint = $request->hint;
-        $challenge->file = $filename;
+        $challenge->save();
+        $challengeI = Challenges::find($challenge->id);
+        $file = $request->file('file');
+        $filename = $challengeI->id.$file->getClientOriginalName();
+        $request->file->move('assets', $filename);
         $challenge->save();
         return redirect("challenge/");
 
@@ -66,16 +65,17 @@ class ChallengeController extends Controller
     public function submit(Request $request, Challenges $challenge)
     {
         $challenge = Challenges::find($challenge->id);
-        $answer = $request->get('answer').'.txt';
-        if ($answer == $challenge->file) {
-            return view("challenge.answer",[
+        $answer = $challenge->id.$request->get('answer') . '.txt';
+        $path = public_path("assets\\".$answer);
+        $isExists = file_exists($path);
+        if ($isExists) {
+            return view("challenge.answer", [
+                "answer" => $answer
+            ]);
+        } else
+            return view("challenge.notanswer", [
                 'challenge' => $challenge
             ]);
-        }
-        else
-        return view("challenge.notanswer",[
-            'challenge' => $challenge
-        ]);
        
 
     }
